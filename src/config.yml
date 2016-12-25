@@ -1,0 +1,37 @@
+#Config file for LVLearning (Lagoverse learning)
+
+Players:
+  123e4567-e89b-12d3-a456-426655440000_exampleUUID:
+    player_name: 'legobozz'
+    traits:
+      helper:
+        renewal_date: 2017-07-31
+    enrolled_courses:
+      paramedic:
+        test_eligible_date: 2016-12-31
+        attempts: 1
+      fireman:
+        test_eligible_date: 2016-12-31
+        attempts: 3
+    ineligible_courses:
+      scientist:
+        eligible_date: 2017-06-30
+    tags:
+      - red
+      - blue
+      - green
+Traits:
+  paramedic:
+    description:
+      'This role can heal players with a cool down...'
+    requirements:
+     - lvlearning.eenroll.paramedic
+    permissions:
+      - perm1
+      - perm2
+    exam_coordinates:
+      X: 1
+      y: 2
+      z: 3
+    course_code: 'P_ABC'
+    attempt_limit: 3

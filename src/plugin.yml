@@ -1,0 +1,11 @@
+name: LVLearning
+version: 0.0A
+author: Lagoboss
+main: com.gmail.lagoland.help.LVLearning.Main
+
+depend: [Vault]
+
+commands:
+  lvl:
+    description:
+    usage: /lvl

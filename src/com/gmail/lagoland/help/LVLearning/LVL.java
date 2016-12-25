@@ -1,0 +1,122 @@
+package com.gmail.lagoland.help.LVLearning;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
+/**
+ * Created by lake.smith on 12/25/2016.
+ */
+public class LVL implements CommandExecutor{
+
+    private final Main plugin;
+
+    public LVL(Main plugin) {
+
+        this.plugin = plugin; // Store the plugin in situations where you need it.
+    }
+
+    //string bank:
+    String versionNumber = "0.0A";
+    String pluginName = "LVLearning";
+    String description = "A plugin to manage courses and user credentials...";
+    String commands = "run '/LVL help' for a list of commands...";
+
+    String cmdLabel_help = "help";
+    String cmdLabel_courses = "courses";
+    String cmdLabel_course = "course";
+    String cmdLabel_ecourses = "ecourses";
+    String cmdLabel_enroll = "enroll";
+    String cmdLabel_test = "test";
+    String cmdLabel_pass = "pass";
+    String cmdLabel_fail = "fail";
+    String cmdLabel_set = "set";
+    String cmdVarExample = " <additional_argument(s)>'";
+    String lib = "Please visit your local library to learn more...";
+
+    String usage = "Usage... '/LVL ";
+    String error = "Invalid command..." + "Please refer to '/LVL help'...";
+
+    String noCoursesFound = "No courses were found... Check your config file and try again...";
+
+
+    @Override
+    public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
+
+        Player player = (Player) commandSender;
+
+        if (command.getName().equalsIgnoreCase("LVL")){
+
+            if(strings.length == 0){
+
+                List<String> messageSuiteNoArgs = new ArrayList<String>();
+
+                messageSuiteNoArgs.add(versionNumber);
+                messageSuiteNoArgs.add(pluginName);
+                messageSuiteNoArgs.add(description);
+                messageSuiteNoArgs.add(commands);
+
+                for (String item : messageSuiteNoArgs){
+
+                    player.sendMessage(item);
+
+                }
+
+                return true;
+            }
+
+            if(strings.length == 1){
+
+                if(strings[0].equalsIgnoreCase("help")){
+                    List<String> messageUsage = new ArrayList<String>();
+
+                    messageUsage.add(cmdLabel_help);
+                    messageUsage.add(cmdLabel_courses);
+                    messageUsage.add(cmdLabel_course);
+                    messageUsage.add(cmdLabel_enroll);
+                    messageUsage.add(cmdLabel_ecourses);
+                    messageUsage.add(cmdLabel_test);
+                    messageUsage.add(cmdLabel_set);
+                    messageUsage.add(cmdLabel_pass);
+                    messageUsage.add(cmdLabel_fail);
+
+                    player.sendMessage("Commands include:");
+
+                    for (String itemMU : messageUsage){
+                        player.sendMessage(usage + itemMU + cmdVarExample);
+                    }
+
+                    player.sendMessage(lib);
+
+                    return true;
+                }
+
+                if(strings[0].equalsIgnoreCase("courses")){
+                    Set<String> courses = plugin.getConfig().getConfigurationSection("Traits").getKeys(false);
+
+                    if(!courses.isEmpty()){
+                        for (String course : courses){
+                            player.sendMessage("Course(s) include: " + course);
+                        }
+
+                        return true;
+                    }
+                    else
+                        player.sendMessage(noCoursesFound);
+                    return true;
+                }
+
+                return true;
+            }
+        }
+
+        return true;
+    }
+
+
+}
+
