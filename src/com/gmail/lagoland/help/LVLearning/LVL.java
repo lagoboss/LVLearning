@@ -35,10 +35,10 @@ public class LVL implements CommandExecutor{
     String cmdLabel_pass = "pass";
     String cmdLabel_fail = "fail";
     String cmdLabel_set = "set";
-    String cmdVarExample = " <additional_argument(s)>'";
+    String cmdVarExample = " <additional_argument(s)>";
     String lib = "Please visit your local library to learn more...";
 
-    String usage = "Usage... '/LVL ";
+    String usage = "/LVL ";
     String error = "Invalid command..." + "Please refer to '/LVL help'...";
 
     String noCoursesFound = "No courses were found... Check your config file and try again...";
