@@ -8,8 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import static sun.audio.AudioPlayer.player;
-
 /**
  * Created by lake.smith on 12/25/2016.
  */
@@ -45,28 +43,12 @@ public class LVL implements CommandExecutor{
 
     String noCoursesFound = "No courses were found... Check your config file and try again...";
     String invalidCourse = "Invalid Course... ";
+    String tooMany = "Too many arguments entered... ";
+    String tooFew = "Too few arguments entered... ";
+
+    String checking = "Checking the list...";
 
     public Boolean b;
-
-    String courseInfromation;
-
-
-    public String courseFoundIndicator(Boolean b){
-
-
-        if(b = true){
-
-            courseInfromation = ;
-
-        }
-
-        if(b = false){
-            courseInfromation = invalidCourse + noCoursesFound;
-        }
-
-        return courseInfromation;
-    }
-
 
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
@@ -94,7 +76,7 @@ public class LVL implements CommandExecutor{
                 return true;
             }
 
-            if(strings.length == 1){
+            else if(strings.length == 1){
 
                 if(strings[0].equalsIgnoreCase("help")){
                     List<String> messageUsage = new ArrayList<String>();
@@ -120,13 +102,12 @@ public class LVL implements CommandExecutor{
                     return true;
                 }
 
-                if(strings[0].equalsIgnoreCase("courses")){
+                else if(strings[0].equalsIgnoreCase("courses")){
 
                     if(!courses.isEmpty()){
                         for (String course : courses){
                             player.sendMessage("Course(s) include: " + course);
                         }
-
                         return true;
                     }
                     else
@@ -134,32 +115,73 @@ public class LVL implements CommandExecutor{
                     return true;
                 }
 
-                if(strings[0].equalsIgnoreCase("course")){
+                else if(strings[0].equalsIgnoreCase("course")){
 
-                    //getting value of 3rd string in command for later comparison to course list
-                    String arg3 = strings[1];
+                    if (strings.length == 1){
+                        player.sendMessage(tooFew);
+                        player.sendMessage("Type: " + usage + cmdLabel_course + cmdVarExample);
+                        return true;
+                    }
 
-                        for(String course : courses){
-                            if (arg3.equalsIgnoreCase(course)){
-                                player.sendMessage("Found! " + plugin.getConfig().get(""));
-                                courseFoundIndicator(true);
-                             }
-                            else{
-                                player.sendMessage("Searching...");
+                    else if(strings.length == 2){
+
+                        player.sendMessage(checking);
+
+                        //getting value of 3rd string in command for later comparison to course list
+                        String arg3 = strings[1];
+                        b = false;
+
+                            for(String course : courses){
+                                if (arg3.equalsIgnoreCase(course)){
+                                    player.sendMessage("Found! " + plugin.getConfig().get(""));
+                                    b = true;
+
+                                    List<String> courseInfo = new ArrayList<>();
+
+                                    //all trait names need to be lower case :/
+
+                                    courseInfo.add(plugin.getConfig().getString("Traits." + arg3.toLowerCase() + "." + "description"));
+                                    courseInfo.add(plugin.getConfig().getString("Traits." + arg3.toLowerCase() + "." + "requirement"));
+                                    courseInfo.add(plugin.getConfig().getString("Traits." + arg3.toLowerCase() + "." + "course_code"));
+
+                                    player.sendMessage("Providing the description, requirement, and course_code below:");
+
+                                    for(String item : courseInfo){
+
+                                        player.sendMessage(item);
+                                        player.sendMessage("=======================================================");
+                                    }
+                                 }
+                                else{
+                                    player.sendMessage("Searching...");
+                                }
                             }
-                        }
 
+                            if(b = false){
+                                player.sendMessage(invalidCourse + noCoursesFound);
 
-                    return true;
+                                return true;
+                            }
+                            else{
+
+                                return true;
+                            }
+                    }
+                    else if (strings.length > 2){
+                        player.sendMessage(tooMany);
+                        player.sendMessage(usage + cmdLabel_course);
+                        return true;
+                    }
+
+                    else{
+                        player.sendMessage("Critical failure in: " + usage + cmdLabel_course);
+                        return true;
+                    }
                 }
-
                 return true;
             }
         }
-
         return true;
     }
-
-
 }
 
