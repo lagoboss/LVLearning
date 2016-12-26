@@ -24,7 +24,7 @@ Traits:
   paramedic:
     description:
       'This role can heal players with a cool down...'
-    requirements:
+    requirement:
      - lvlearning.eenroll.paramedic
     permissions:
       - perm1
