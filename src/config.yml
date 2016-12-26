@@ -35,3 +35,31 @@ Traits:
       z: 3
     course_code: 'P_ABC'
     attempt_limit: 3
+  farmer:
+      description:
+        'This role is a licensed farmer...'
+      requirement:
+       - lvlearning.eenroll.farmer
+      permissions:
+        - perm1
+        - perm2
+      exam_coordinates:
+        X: 1
+        y: 2
+        z: 3
+      course_code: 'F_ABC'
+      attempt_limit: 3
+  police_officer:
+        description:
+          'This role is a licensed law-enforcement agent...'
+        requirement:
+         - lvlearning.eenroll.police
+        permissions:
+          - perm1
+          - perm2
+        exam_coordinates:
+          X: 1
+          y: 2
+          z: 3
+        course_code: 'PO_ABC'
+        attempt_limit: 3

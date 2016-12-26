@@ -43,8 +43,8 @@ public class LVL implements CommandExecutor{
 
     String noCoursesFound = "No courses were found... Check your config file and try again...";
     String invalidCourse = "Invalid Course... ";
-    String tooMany = "Too many arguments entered... ";
-    String tooFew = "Too few arguments entered... ";
+    String tooMany = "Too many arguments entered... type ";
+    String tooFew = "Too few arguments entered... type ";
 
     String checking = "Checking the list...";
 
@@ -105,13 +105,21 @@ public class LVL implements CommandExecutor{
                 else if(strings[0].equalsIgnoreCase("courses")){
 
                     if(!courses.isEmpty()){
+                        player.sendMessage("Course(s) include: ");
+
                         for (String course : courses){
-                            player.sendMessage("Course(s) include: " + course);
+                            player.sendMessage(course);
                         }
                         return true;
                     }
                     else
                         player.sendMessage(noCoursesFound);
+                    return true;
+                }
+
+                else if(strings[0].equalsIgnoreCase("course")){
+
+                    player.sendMessage(tooFew + usage + cmdLabel_course + cmdVarExample);
                     return true;
                 }
             }
@@ -128,14 +136,20 @@ public class LVL implements CommandExecutor{
 
                         if (strings[1].equalsIgnoreCase(course)) {
 
-                            player.sendMessage("Found! " + plugin.getConfig().getString("Traits." + strings[1]));
+                            String trait = strings[1].toLowerCase();
+
+                            player.sendMessage("Found! " + trait);
 
                             b = true;
                             //all trait names need to be lower case :/
 
-                            player.sendMessage("Description: " + plugin.getConfig().getString("Traits." + strings[1].toLowerCase() + "." + "description"));
-                            player.sendMessage("Required Permission: " + plugin.getConfig().getString("Traits." + strings[1].toLowerCase() + "." + "requirement"));
-                            player.sendMessage("Course Code: " + plugin.getConfig().getString("Traits." + strings[1].toLowerCase() + "." + "course_code"));
+                            String description = plugin.getConfig().getString("Traits." + strings[1].toLowerCase() + "."+ "description");
+                            String requirement = plugin.getConfig().getString("Traits." + strings[1].toLowerCase() + "." + "requirement");
+                            String courseCode = plugin.getConfig().getString("Traits." + strings[1].toLowerCase() + "." + "course_code");
+
+                            player.sendMessage("Description: " + description);
+                            player.sendMessage("Required Permission: " + requirement);
+                            player.sendMessage("Course Code: " + courseCode);
 
                         } else {
                             player.sendMessage("Searching...");
@@ -149,6 +163,9 @@ public class LVL implements CommandExecutor{
                     } else {
                         return true;
                     }
+                }
+                else{
+                    player.sendMessage(error);
                 }
             }
                 return true;
