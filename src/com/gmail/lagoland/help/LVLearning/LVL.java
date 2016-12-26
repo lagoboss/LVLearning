@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import static sun.audio.AudioPlayer.player;
+
 /**
  * Created by lake.smith on 12/25/2016.
  */
@@ -42,12 +44,35 @@ public class LVL implements CommandExecutor{
     String error = "Invalid command..." + "Please refer to '/LVL help'...";
 
     String noCoursesFound = "No courses were found... Check your config file and try again...";
+    String invalidCourse = "Invalid Course... ";
+
+    public Boolean b;
+
+    String courseInfromation;
+
+
+    public String courseFoundIndicator(Boolean b){
+
+
+        if(b = true){
+
+            courseInfromation = ;
+
+        }
+
+        if(b = false){
+            courseInfromation = invalidCourse + noCoursesFound;
+        }
+
+        return courseInfromation;
+    }
 
 
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
 
         Player player = (Player) commandSender;
+        Set<String> courses = plugin.getConfig().getConfigurationSection("Traits").getKeys(false);
 
         if (command.getName().equalsIgnoreCase("LVL")){
 
@@ -96,7 +121,6 @@ public class LVL implements CommandExecutor{
                 }
 
                 if(strings[0].equalsIgnoreCase("courses")){
-                    Set<String> courses = plugin.getConfig().getConfigurationSection("Traits").getKeys(false);
 
                     if(!courses.isEmpty()){
                         for (String course : courses){
@@ -107,6 +131,25 @@ public class LVL implements CommandExecutor{
                     }
                     else
                         player.sendMessage(noCoursesFound);
+                    return true;
+                }
+
+                if(strings[0].equalsIgnoreCase("course")){
+
+                    //getting value of 3rd string in command for later comparison to course list
+                    String arg3 = strings[1];
+
+                        for(String course : courses){
+                            if (arg3.equalsIgnoreCase(course)){
+                                player.sendMessage("Found! " + plugin.getConfig().get(""));
+                                courseFoundIndicator(true);
+                             }
+                            else{
+                                player.sendMessage("Searching...");
+                            }
+                        }
+
+
                     return true;
                 }
 
