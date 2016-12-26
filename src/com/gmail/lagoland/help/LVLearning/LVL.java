@@ -41,7 +41,7 @@ public class LVL implements CommandExecutor{
     String usage = "/LVL ";
     String error = "Invalid command..." + "Please refer to '/LVL help'...";
 
-    String noCoursesFound = "No courses were found... Check your config file and try again...";
+    String noCoursesFound = "No courses were found matching that name... Check your config file and try again...";
     String invalidCourse = "Invalid Course... ";
     String tooMany = "Too many arguments entered... type ";
     String tooFew = "Too few arguments entered... type ";
@@ -132,36 +132,37 @@ public class LVL implements CommandExecutor{
 
                     b = false;
 
-                    for (String course : courses) {
+                    outer:
+                    for (int i = 1; i <= courses.size(); i++) {
 
-                        if (strings[1].equalsIgnoreCase(course)) {
+                        for (String course : courses){
 
-                            String trait = strings[1].toLowerCase();
+                            if (strings[1].equalsIgnoreCase(course)) {
 
-                            player.sendMessage("Found! " + trait);
+                                String trait = strings[1].toLowerCase();
 
-                            b = true;
-                            //all trait names need to be lower case :/
+                                player.sendMessage("Found! " + trait);
 
-                            String description = plugin.getConfig().getString("Traits." + strings[1].toLowerCase() + "."+ "description");
-                            String requirement = plugin.getConfig().getString("Traits." + strings[1].toLowerCase() + "." + "requirement");
-                            String courseCode = plugin.getConfig().getString("Traits." + strings[1].toLowerCase() + "." + "course_code");
+                                b = true;
+                                //all trait names need to be lower case :/
 
-                            player.sendMessage("Description: " + description);
-                            player.sendMessage("Required Permission: " + requirement);
-                            player.sendMessage("Course Code: " + courseCode);
+                                String description = plugin.getConfig().getString("Traits." + strings[1].toLowerCase() + "."+ "description");
+                                String requirement = plugin.getConfig().getString("Traits." + strings[1].toLowerCase() + "." + "requirement");
+                                String courseCode = plugin.getConfig().getString("Traits." + strings[1].toLowerCase() + "." + "course_code");
 
-                        } else {
-                            player.sendMessage("Searching...");
+                                player.sendMessage("Description: " + description);
+                                player.sendMessage("Required Permission: " + requirement);
+                                player.sendMessage("Course Code: " + courseCode);
+
+                                break outer;
+
+                            } else {
+                                player.sendMessage("Searching...");
+                            }
                         }
-                    }
-
-                    if (b = false) {
-                        player.sendMessage(invalidCourse + noCoursesFound);
-
-                        return true;
-                    } else {
-                        return true;
+                        if (i == courses.size()){
+                            player.sendMessage(invalidCourse + noCoursesFound);
+                        }
                     }
                 }
                 else{
