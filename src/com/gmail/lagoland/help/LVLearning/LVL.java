@@ -5,6 +5,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -48,13 +49,12 @@ public class LVL implements CommandExecutor{
 
     String checking = "Checking the list...";
 
-    public Boolean b;
-
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
 
         Player player = (Player) commandSender;
         Set<String> courses = plugin.getConfig().getConfigurationSection("Traits").getKeys(false);
+        String[] coursesArray = courses.toArray(new String[courses.size()]);
 
         if (command.getName().equalsIgnoreCase("LVL")){
 
@@ -130,48 +130,59 @@ public class LVL implements CommandExecutor{
 
                     player.sendMessage(checking);
 
-                    b = false;
+                    if(Arrays.asList(coursesArray).contains(strings[1].toLowerCase())){
 
-                    outer:
-                    for (int i = 1; i <= courses.size(); i++) {
+                        String trait = strings[1].toLowerCase();
 
-                        for (String course : courses){
+                        player.sendMessage("Found! " + trait);
 
-                            if (strings[1].equalsIgnoreCase(course)) {
+                        String description = plugin.getConfig().getString("Traits." + strings[1].toLowerCase() + "."+ "description");
+                        String requirement = plugin.getConfig().getString("Traits." + strings[1].toLowerCase() + "." + "requirement");
+                        String courseCode = plugin.getConfig().getString("Traits." + strings[1].toLowerCase() + "." + "course_code");
 
-                                String trait = strings[1].toLowerCase();
-
-                                player.sendMessage("Found! " + trait);
-
-                                b = true;
-                                //all trait names need to be lower case :/
-
-                                String description = plugin.getConfig().getString("Traits." + strings[1].toLowerCase() + "."+ "description");
-                                String requirement = plugin.getConfig().getString("Traits." + strings[1].toLowerCase() + "." + "requirement");
-                                String courseCode = plugin.getConfig().getString("Traits." + strings[1].toLowerCase() + "." + "course_code");
-
-                                player.sendMessage("Description: " + description);
-                                player.sendMessage("Required Permission: " + requirement);
-                                player.sendMessage("Course Code: " + courseCode);
-
-                                break outer;
-
-                            } else {
-                                player.sendMessage("Searching...");
-                            }
+                        player.sendMessage("Description: " + description);
+                        player.sendMessage("Required Permission: " + requirement);
+                        player.sendMessage("Course Code: " + courseCode);
+                        return  true;
                         }
-                        if (i == courses.size()){
-                            player.sendMessage(invalidCourse + noCoursesFound);
+
+                    else {
+                        player.sendMessage(invalidCourse + noCoursesFound);
+                            return true;
                         }
-                    }
                 }
+                else if (strings[0].equalsIgnoreCase("enroll")) {
+
+                    if(Arrays.asList(coursesArray).contains(strings[1].toLowerCase())){
+                    }
+
+                    return true;
+                }
+
+                else if (strings[0].equalsIgnoreCase("ecourses")) {
+                    return true;
+                }
+
+                else if (strings[0].equalsIgnoreCase("test")) {
+                    return true;
+                }
+
                 else{
                     player.sendMessage(error);
+                    return true;
                 }
             }
-                return true;
-        }
+
+            else if(strings.length == 3) {
+
+                if (strings[0].equalsIgnoreCase("test")) {
+                    return true;
+                }
+
+            }
+            return true;
+        }//if command = LVL code block end
         return true;
-    }
+    }//on command end code block end
 }
 
