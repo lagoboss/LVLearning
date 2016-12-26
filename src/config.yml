@@ -35,6 +35,7 @@ Traits:
       z: 3
     course_code: 'P_ABC'
     attempt_limit: 3
+    school: 'Vella University'
   farmer:
       description:
         'This role is a licensed farmer...'
@@ -49,6 +50,7 @@ Traits:
         z: 3
       course_code: 'F_ABC'
       attempt_limit: 3
+      school: 'Vella University'
   police_officer:
         description:
           'This role is a licensed law-enforcement agent...'
@@ -63,3 +65,4 @@ Traits:
           z: 3
         course_code: 'PO_ABC'
         attempt_limit: 3
+        school: 'Vella University'

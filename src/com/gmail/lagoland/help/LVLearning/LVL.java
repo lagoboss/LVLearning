@@ -1,4 +1,5 @@
 package com.gmail.lagoland.help.LVLearning;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -49,12 +50,20 @@ public class LVL implements CommandExecutor{
 
     String checking = "Checking the list...";
 
+    String noPerms = "You do not have permission to enroll in this course; pelase see course description for more details...";
+    String confirmEnroll1 = "You enrolled in course: ";
+    String confirmEnroll2 = " at school: ";
+    String confirmEnroll3 = " for: $";
+
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
 
         Player player = (Player) commandSender;
         Set<String> courses = plugin.getConfig().getConfigurationSection("Traits").getKeys(false);
         String[] coursesArray = courses.toArray(new String[courses.size()]);
+
+        Set<String> uuids = plugin.getConfig().getConfigurationSection("Players").getKeys(false);
+        String[] uuidsArray = uuids.toArray(new String[courses.size()]);
 
         if (command.getName().equalsIgnoreCase("LVL")){
 
@@ -139,10 +148,12 @@ public class LVL implements CommandExecutor{
                         String description = plugin.getConfig().getString("Traits." + strings[1].toLowerCase() + "."+ "description");
                         String requirement = plugin.getConfig().getString("Traits." + strings[1].toLowerCase() + "." + "requirement");
                         String courseCode = plugin.getConfig().getString("Traits." + strings[1].toLowerCase() + "." + "course_code");
+                        String school = plugin.getConfig().getString("Traits." + strings[1].toLowerCase() + "." + "school");
 
                         player.sendMessage("Description: " + description);
                         player.sendMessage("Required Permission: " + requirement);
                         player.sendMessage("Course Code: " + courseCode);
+                        player.sendMessage("School: " + school);
                         return  true;
                         }
 
@@ -154,6 +165,53 @@ public class LVL implements CommandExecutor{
                 else if (strings[0].equalsIgnoreCase("enroll")) {
 
                     if(Arrays.asList(coursesArray).contains(strings[1].toLowerCase())){
+                        //check to see if the player has the permission to enroll
+                        if(4 > 1){
+
+                            String uuid = player.getUniqueId().toString();
+                            String playerName = player.getName();
+
+                            //check to see if uuid exists on list
+                            if(!Arrays.asList(uuidsArray).contains(uuid)){
+                                plugin.getConfig().createSection("Players." + uuid);
+
+                                //make a method to add this stuff with a command /lvl createprofile player_name so duplication is reduced
+                                //change the strings like "Players." into variables
+                                plugin.getConfig().createSection("Players." + uuid + "player_name");
+                                plugin.getConfig().set("Players." + uuid + "player_name.", playerName);
+                                plugin.getConfig().createSection("Players." + uuid + "." + "traits");
+                                plugin.getConfig().createSection("Players." + uuid + "." + "enrolled_courses");
+                                plugin.getConfig().createSection("Players." + uuid + "." + "ineligible_courses");
+                                plugin.getConfig().createSection("Players." + uuid + "." + "tags");
+                                plugin.getConfig().set("Players." + uuid + "tags", "profileAddedByConsole");
+
+                                plugin.getConfig().set("Players." + uuid + "." + "enrolled_courses", strings[1].toLowerCase());
+                                plugin.saveConfig();
+
+                                player.sendMessage("Profile created for uuid: " + uuid);
+
+                                String school = plugin.getConfig().getString("Traits." + strings[1].toLowerCase() + "." + "school");
+                                player.sendMessage(confirmEnroll1 + strings[1] + confirmEnroll2 + school + confirmEnroll3);
+                            }
+
+                            else if(Arrays.asList(uuidsArray).contains(uuid)){
+
+                                plugin.getConfig().set("Players." + uuid + "." + "enrolled_courses", strings[1].toLowerCase());
+                                plugin.saveConfig();
+
+                                player.sendMessage("Profile created for uuid: " + uuid);
+
+                                String school = plugin.getConfig().getString("Traits." + strings[1].toLowerCase() + "." + "school");
+                                player.sendMessage(confirmEnroll1 + strings[1] + confirmEnroll2 + school + confirmEnroll3);
+                            }
+                            return true;
+                        }
+                        //if player does not have this permission, do this
+                        else{
+                            player.sendMessage(noPerms);
+                            return true;
+                        }
+
                     }
 
                     return true;
@@ -167,6 +225,7 @@ public class LVL implements CommandExecutor{
                     return true;
                 }
 
+                //end of commands with 2 additional arguments
                 else{
                     player.sendMessage(error);
                     return true;
@@ -179,6 +238,11 @@ public class LVL implements CommandExecutor{
                     return true;
                 }
 
+                //end of commands with 3 additional arguments
+                else{
+                    player.sendMessage(error);
+                    return true;
+                }
             }
             return true;
         }//if command = LVL code block end
