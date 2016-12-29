@@ -92,16 +92,35 @@ public class LVL implements CommandExecutor{
 
         Player player = (Player) commandSender;
 
-        Object[] traitObject = plugin.getConfig().getList(T).toArray();
-        String[] traits = (String[]) traitObject[0];
-        Set courses = new HashSet(Arrays.asList(traits));
+        //Object[] traitObject = plugin.getConfig().getList(T).toArray();
+        //String[] traits = (String[]) traitObject[0];
+        //Set courses = new HashSet(Arrays.asList(traits));
 
-        Set<String> uuids = plugin.getConfig().getConfigurationSection(p).getKeys(false);
+        Set<String> courses = new HashSet<String>() {{
+            add("");
+        }};
+        Set<String> uuids = new HashSet<String>() {{
+            add("");
+        }};
 
-        Object[] playersObject = plugin.getConfig().getList(p).toArray();
-        String[] players = (String[]) playersObject[0];
+        HashSet uuidsS = new HashSet(plugin.getConfig().getList(p));
 
-        String[] uuidsArray = uuids.toArray(new String[courses.size()]);
+        Iterator<String> itUuidsS = uuidsS.iterator();
+
+        while (itUuidsS.hasNext()){
+            uuids.add(itUuidsS.next());
+        }
+
+        HashSet coursesS = new HashSet(plugin.getConfig().getList(T));
+
+        Iterator<String> itCoursesS = coursesS.iterator();
+
+        while (itUuidsS.hasNext()){
+            uuids.add(itUuidsS.next());
+        }
+
+        Set<String> traits = courses;
+
 
         if (command.getName().equalsIgnoreCase("LVL")){
 
@@ -154,8 +173,9 @@ public class LVL implements CommandExecutor{
                     if(!courses.isEmpty()){
                         player.sendMessage("Course(s) include: ");
 
-                        for (Object course : courses){
-                            player.sendMessage(course.toString());
+                        //fix ClassCastException string <- > linked hashmaps
+                        for (String course : courses){
+                            player.sendMessage(course);
                         }
                         return true;
                     }
@@ -183,6 +203,7 @@ public class LVL implements CommandExecutor{
 
                         player.sendMessage("Found! " + trait);
 
+                        //need to fix the getString to get list item?
                         String description = plugin.getConfig().getString("Traits." + strings[1].toLowerCase() + "."+ "description");
                         String requirement = plugin.getConfig().getString("Traits." + strings[1].toLowerCase() + "." + "requirement");
                         String courseCode = plugin.getConfig().getString("Traits." + strings[1].toLowerCase() + "." + "course_code");
@@ -210,7 +231,8 @@ public class LVL implements CommandExecutor{
                             String playerName = player.getName();
 
                             //check to see if uuid exists on list
-                            if(!Arrays.asList(uuidsArray).contains(uuid)){
+                            //add logic to not create a duplicate profile
+                            if(!Arrays.asList(uuids).contains(uuid)){
 
                                 plugin.getConfig().getStringList(p).add(uuid);
                                 plugin.saveConfig();
@@ -249,7 +271,7 @@ public class LVL implements CommandExecutor{
                                 player.sendMessage(confirmEnroll1 + strings[1] + confirmEnroll2 + school + confirmEnroll3);
                             }
 
-                            else if(Arrays.asList(uuidsArray).contains(uuid)){
+                            else if(Arrays.asList(uuids).contains(uuid)){
 
                                 plugin.getConfig().getStringList(p + dot + uuid + eC).add(strings[1].toLowerCase());
                                 plugin.getConfig().set("Players." + uuid, "ineligible_courses");
