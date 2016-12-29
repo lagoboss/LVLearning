@@ -96,31 +96,12 @@ public class LVL implements CommandExecutor{
         //String[] traits = (String[]) traitObject[0];
         //Set courses = new HashSet(Arrays.asList(traits));
 
-        Set<String> courses = new HashSet<String>() {{
-            add("");
-        }};
-        Set<String> uuids = new HashSet<String>() {{
-            add("");
-        }};
 
-        HashSet uuidsS = new HashSet(plugin.getConfig().getList(p));
+        Set<String> uuids = plugin.getConfig().getConfigurationSection(p).getKeys(false);
 
-        Iterator<String> itUuidsS = uuidsS.iterator();
-
-        while (itUuidsS.hasNext()){
-            uuids.add(itUuidsS.next());
-        }
-
-        HashSet coursesS = new HashSet(plugin.getConfig().getList(T));
-
-        Iterator<String> itCoursesS = coursesS.iterator();
-
-        while (itUuidsS.hasNext()){
-            uuids.add(itUuidsS.next());
-        }
+        Set<String> courses = plugin.getConfig().getConfigurationSection(T).getKeys(false);
 
         Set<String> traits = courses;
-
 
         if (command.getName().equalsIgnoreCase("LVL")){
 
@@ -136,7 +117,6 @@ public class LVL implements CommandExecutor{
                 for (String item : messageSuiteNoArgs){
 
                     player.sendMessage(item);
-
                 }
 
                 return true;
@@ -170,10 +150,11 @@ public class LVL implements CommandExecutor{
 
                 else if(strings[0].equalsIgnoreCase("courses")){
 
-                    if(!courses.isEmpty()){
+                    if(!(courses.size() == 0)){
                         player.sendMessage("Course(s) include: ");
 
                         //fix ClassCastException string <- > linked hashmaps
+
                         for (String course : courses){
                             player.sendMessage(course);
                         }
