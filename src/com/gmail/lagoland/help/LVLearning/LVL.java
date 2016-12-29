@@ -91,10 +91,16 @@ public class LVL implements CommandExecutor{
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
 
         Player player = (Player) commandSender;
-        Set<String> courses = plugin.getConfig().getConfigurationSection("Traits").getKeys(false);
-        String[] coursesArray = courses.toArray(new String[courses.size()]);
 
-        Set<String> uuids = plugin.getConfig().getConfigurationSection("Players").getKeys(false);
+        Object[] traitObject = plugin.getConfig().getList(T).toArray();
+        String[] traits = (String[]) traitObject[0];
+        Set courses = new HashSet(Arrays.asList(traits));
+
+        Set<String> uuids = plugin.getConfig().getConfigurationSection(p).getKeys(false);
+
+        Object[] playersObject = plugin.getConfig().getList(p).toArray();
+        String[] players = (String[]) playersObject[0];
+
         String[] uuidsArray = uuids.toArray(new String[courses.size()]);
 
         if (command.getName().equalsIgnoreCase("LVL")){
@@ -148,8 +154,8 @@ public class LVL implements CommandExecutor{
                     if(!courses.isEmpty()){
                         player.sendMessage("Course(s) include: ");
 
-                        for (String course : courses){
-                            player.sendMessage(course);
+                        for (Object course : courses){
+                            player.sendMessage(course.toString());
                         }
                         return true;
                     }
@@ -171,7 +177,7 @@ public class LVL implements CommandExecutor{
 
                     player.sendMessage(checking);
 
-                    if(Arrays.asList(coursesArray).contains(strings[1].toLowerCase())){
+                    if(traits.toString().contains(strings[1].toLowerCase())){
 
                         String trait = strings[1].toLowerCase();
 
@@ -196,7 +202,7 @@ public class LVL implements CommandExecutor{
                 }
                 else if (strings[0].equalsIgnoreCase("enroll")) {
 
-                    if(Arrays.asList(coursesArray).contains(strings[1].toLowerCase())){
+                    if(traits.toString().contains(strings[1].toLowerCase())){
                         //check to see if the player has the permission to enroll
                         if(4 > 1){
 
