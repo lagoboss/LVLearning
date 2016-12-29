@@ -1,46 +1,45 @@
 #Config file for LVLearning (Lagoverse learning)
 
 Players:
-  123e4567-e89b-12d3-a456-426655440000_exampleUUID:
-    player_name: 'legobozz'
-    traits:
-      helper:
-        renewal_date: 2017-07-31
-    enrolled_courses:
-      paramedic:
-        test_eligible_date: 2016-12-31
-        attempts: 1
-      fireman:
-        test_eligible_date: 2016-12-31
-        attempts: 3
-    ineligible_courses:
-      scientist:
-        eligible_date: 2017-06-30
-    tags:
-      - red
-      - blue
-      - green
+  - 123e4567-e89b-12d3-a456-426655440000_exampleUUID:
+      player_name: 'legobozz'
+      traits:
+        - helper:
+            renewal_date: 2017-07-31
+      enrolled_courses:
+        - paramedic:
+            test_eligible_date: 2016-12-31
+            attempts: 1
+        - fireman:
+            test_eligible_date: 2016-12-31
+            attempts: 3
+      ineligible_courses:
+        - scientist:
+            eligible_date: 2017-06-30
+      tags:
+        - red
+        - blue
+        - green
 Traits:
-  paramedic:
-    description:
-      'This role can heal players with a cool down...'
-    requirement:
-     - lvlearning.eenroll.paramedic
-    permissions:
+  - paramedic:
+      description: "This role can heal players with a cool down..."
+      requirement:
+      - lvlearning.eenroll.paramedic
+      permissions:
       - perm1
       - perm2
-    exam_coordinates:
-      X: 1
-      y: 2
-      z: 3
-    course_code: 'P_ABC'
-    attempt_limit: 3
-    school: 'Vella University'
-  farmer:
-      description:
-        'This role is a licensed farmer...'
+      exam_coordinates:
+        X: 1
+        y: 2
+        z: 3
+      course_code: "P_ABC"
+      attempt_limit: 3
+      school: "Vella University"
+      study_time: 7
+  - farmer:
+      description: "This role can farm"
       requirement:
-       - lvlearning.eenroll.farmer
+        - lvlearning.eenroll.farmer
       permissions:
         - perm1
         - perm2
@@ -48,14 +47,14 @@ Traits:
         X: 1
         y: 2
         z: 3
-      course_code: 'F_ABC'
+      course_code: "F_ABC"
       attempt_limit: 3
-      school: 'Vella University'
-  police_officer:
-        description:
-          'This role is a licensed law-enforcement agent...'
+      school: "Vella University"
+      study_time: 7
+  - police:
+        description: "This role can enforce players..."
         requirement:
-         - lvlearning.eenroll.police
+          - lvlearning.eenroll.police
         permissions:
           - perm1
           - perm2
@@ -63,6 +62,7 @@ Traits:
           X: 1
           y: 2
           z: 3
-        course_code: 'PO_ABC'
+        course_code: "PO_ABC"
         attempt_limit: 3
-        school: 'Vella University'
+        school: "Vella University"
+        study_time: 7

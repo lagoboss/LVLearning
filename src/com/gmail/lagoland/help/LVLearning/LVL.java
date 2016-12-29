@@ -5,10 +5,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * Created by lake.smith on 12/25/2016.
@@ -54,6 +52,40 @@ public class LVL implements CommandExecutor{
     String confirmEnroll1 = "You enrolled in course: ";
     String confirmEnroll2 = " at school: ";
     String confirmEnroll3 = " for: $";
+
+    String dot = ".";
+    String p = "Players";
+    String pN = "player_name";
+    String t = "traits";
+    String eC = "enrolled_courses";
+    String tED = "test_eligible_date";
+    String iC = "ineligible_courses";
+    String eD = "eligible_date";
+    String tags = "tags";
+    String T = "Traits";
+    String d = "description";
+    String r = "requirement";
+    String perm = "permissions";
+    String eCor = "exam_coordinates";
+    String x = "x";
+    String y = "y";
+    String z = "z";
+    String cC = "course_code";
+    String aL = "attempt_limit";
+    String s = "school";
+    String sT = "study_time";
+
+    String consoleAddedTag = "profile_created_by_console";
+
+    String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
+
+    public static Date addDays(Date date, int days)
+    {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.add(Calendar.DATE, days); //minus number would decrement the days
+        return cal.getTime();
+    }
 
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
@@ -174,45 +206,55 @@ public class LVL implements CommandExecutor{
                             //check to see if uuid exists on list
                             if(!Arrays.asList(uuidsArray).contains(uuid)){
 
-                                plugin.getConfig().set("Players", uuid);
+                                plugin.getConfig().getStringList(p).add(uuid);
                                 plugin.saveConfig();
 
                                 //make a method to add this stuff with a command /lvl createprofile player_name so duplication is reduced
                                 //change the strings like "Players." into variables
-                                plugin.getConfig().set("Players." + uuid, "player_name");
+                                plugin.getConfig().getStringList(p + dot + uuid).add(pN);
                                 plugin.saveConfig();
-                                plugin.getConfig().set("Players." + uuid + ".player_name.", playerName);
+                                plugin.getConfig().getStringList(p + dot + uuid + dot + pN).add(playerName);
                                 plugin.saveConfig();
-                                plugin.getConfig().set("Players." + uuid, "traits");
+                                plugin.getConfig().getStringList(p + dot + uuid).add(t);
                                 plugin.saveConfig();
-                                plugin.getConfig().set("Players." + uuid, "enrolled_courses");
+                                plugin.getConfig().getStringList(p + dot + uuid).add(eC);
                                 plugin.saveConfig();
-                                plugin.getConfig().set("Players." + uuid, "ineligible_courses");
+                                plugin.getConfig().getStringList(p + dot + uuid).add(iC);
                                 plugin.saveConfig();
-                                plugin.getConfig().set("Players." + uuid, "tags");
+                                plugin.getConfig().getStringList(p + dot + uuid).add(tags);
                                 plugin.saveConfig();
-                                plugin.getConfig().set("Players." + uuid + ".tags", "profileAddedByConsole");
-                                plugin.saveConfig();
-
-                                //fix terrible file structure
-                                //fix
-                                plugin.getConfig().set("Players." + uuid + "." + "enrolled_courses", strings[1].toLowerCase());
+                                plugin.getConfig().getStringList(p + dot + uuid + dot + t).add(consoleAddedTag);
                                 plugin.saveConfig();
 
                                 player.sendMessage("Profile created for uuid: " + uuid);
 
-                                String school = plugin.getConfig().getString("Traits." + strings[1].toLowerCase() + "." + "school");
+                                //fix terrible file structure
+                                //fix
+                                plugin.getConfig().getStringList(p + dot + uuid + eC).add(strings[1].toLowerCase());
+                                plugin.getConfig().set("Players." + uuid, "ineligible_courses");
+                                plugin.saveConfig();
+                                plugin.getConfig().getStringList(p + dot + uuid + eC + dot + strings[1].toLowerCase()).add(tED);
+                                plugin.saveConfig();
+                                int days = plugin.getConfig().getInt(T + dot + strings[1].toLowerCase() + dot + sT);
+                                Date date = new java.util.Date();
+                                plugin.getConfig().getStringList(p + dot + uuid + eC + dot + strings[1].toLowerCase() + dot + tED).add(addDays(date, days).toString());
+
+                                String school = plugin.getConfig().getString(T + dot + strings[1].toLowerCase() + dot + s);
                                 player.sendMessage(confirmEnroll1 + strings[1] + confirmEnroll2 + school + confirmEnroll3);
                             }
 
                             else if(Arrays.asList(uuidsArray).contains(uuid)){
 
-                                plugin.getConfig().set("Players." + uuid + ".enrolled_courses", strings[1].toLowerCase());
+                                plugin.getConfig().getStringList(p + dot + uuid + eC).add(strings[1].toLowerCase());
+                                plugin.getConfig().set("Players." + uuid, "ineligible_courses");
                                 plugin.saveConfig();
+                                plugin.getConfig().getStringList(p + dot + uuid + eC + dot + strings[1].toLowerCase()).add(tED);
+                                plugin.saveConfig();
+                                int days = plugin.getConfig().getInt(T + dot + strings[1].toLowerCase() + dot + sT);
+                                Date date = new java.util.Date();
+                                plugin.getConfig().getStringList(p + dot + uuid + eC + dot + strings[1].toLowerCase() + dot + tED).add(addDays(date, days).toString());
 
-                                player.sendMessage("Profile updated for uuid: " + uuid);
-
-                                String school = plugin.getConfig().getString("Traits." + strings[1].toLowerCase() + "." + "school");
+                                String school = plugin.getConfig().getString(T + dot + strings[1].toLowerCase() + dot + s);
                                 player.sendMessage(confirmEnroll1 + strings[1] + confirmEnroll2 + school + confirmEnroll3);
                             }
                             return true;
