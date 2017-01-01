@@ -1,48 +1,63 @@
 #Config file for LVLearning (Lagoverse learning)
 
 Players:
-  - 123e4567-e89b-12d3-a456-426655440000_exampleUUID:
-      player_name: 'legobozz'
-      traits:
-        - helper:
-            renewal_date: 2017-07-31
-      enrolled_courses:
-        - paramedic:
-            test_eligible_date: 2016-12-31
-            attempts: 1
-        - fireman:
-            test_eligible_date: 2016-12-31
-            attempts: 3
-      ineligible_courses:
-        - scientist:
-            eligible_date: 2017-06-30
-      tags:
-        - red
-        - blue
-        - green
+  123e4567-e89b-12d3-a456-426655440000_exampleUUID:
+    player_name: "legobozz"
+    traits:
+      helper:
+        renewal_date: 2017-07-31
+    enrolled_courses:
+      paramedic:
+        test_eligible_date: 2016-12-31
+        attempts: 1
+      fireman:
+        test_eligible_date: 2016-12-31
+        attempts: 3
+    ineligible_courses:
+      scientist:
+        eligible_date: 2017-06-30
+    tags: ["red", "blue", "green"]
 Traits:
-  - paramedic:
-      description: "This role can heal players with a cool down..."
-      requirement:
-      - lvlearning.eenroll.paramedic
-      permissions:
-      - perm1
-      - perm2
+  paramedic:
+    description: "This role can heal players with a cool down..."
+    requirement: "lvlearning.eenroll.paramedic"
+    permissions: ["perm1", "perm2"]
+    exam_coordinates:
+      X: 1
+      y: 2
+      z: 3
+    course_code: "P_ABC"
+    attempt_limit: 3
+    school: "Vella University"
+    study_time: 7
+  teacher:
+      description: "This role can teach other players..."
+      requirement: "lvlearning.eenroll.teacher"
+      permissions: ["perm1", "perm2"]
       exam_coordinates:
         X: 1
         y: 2
         z: 3
-      course_code: "P_ABC"
+      course_code: "T_ABC"
       attempt_limit: 3
       school: "Vella University"
       study_time: 7
-  - farmer:
-      description: "This role can farm"
-      requirement:
-        - lvlearning.eenroll.farmer
-      permissions:
-        - perm1
-        - perm2
+  scientist:
+      description: "This role can practive sciene..."
+      requirement: "lvlearning.eenroll.science"
+      permissions: ["perm1", "perm2"]
+      exam_coordinates:
+        X: 1
+        y: 2
+        z: 3
+      course_code: "Sci_ABC"
+      attempt_limit: 3
+      school: "Vella University"
+      study_time: 7
+  farmer:
+      description: "This role can farm..."
+      requirement: "lvlearning.eenroll.farmer"
+      permissions: ["perm1", "perm2"]
       exam_coordinates:
         X: 1
         y: 2
@@ -51,18 +66,27 @@ Traits:
       attempt_limit: 3
       school: "Vella University"
       study_time: 7
-  - police:
-        description: "This role can enforce players..."
-        requirement:
-          - lvlearning.eenroll.police
-        permissions:
-          - perm1
-          - perm2
-        exam_coordinates:
-          X: 1
-          y: 2
-          z: 3
-        course_code: "PO_ABC"
-        attempt_limit: 3
-        school: "Vella University"
-        study_time: 7
+  investigator:
+      description: "This role can investigate..."
+      requirement: "lvlearning.eenroll.farm"
+      permissions: ["perm1", "perm2"]
+      exam_coordinates:
+        X: 1
+        y: 2
+        z: 3
+      course_code: "I_ABC"
+      attempt_limit: 3
+      school: "Vella University"
+      study_time: 7
+  police:
+      description: "This role can police..."
+      requirement: "lvlearning.eenroll.police"
+      permissions: ["perm1", "perm2"]
+      exam_coordinates:
+        X: 1
+        y: 2
+        z: 3
+      course_code: "PP_ABC"
+      attempt_limit: 3
+      school: "Vella University"
+      study_time: 7
