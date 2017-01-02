@@ -14,6 +14,7 @@ public class Main extends JavaPlugin{
     public void onDisable() {
 
         saveConfig();
+        MySQL.disconnect();
     }
 
     @Override
@@ -22,8 +23,15 @@ public class Main extends JavaPlugin{
         this.getConfig().options().copyDefaults(true);
         saveConfig();
 
-        this.getCommand("LVL").setExecutor(new LVL(this));
+        //this.getCommand("LVL").setExecutor(new LVL(this));
 
+        String h = this.getConfig().get("host").toString();
+        String p = this.getConfig().get("port").toString();
+        String d = this.getConfig().get("database").toString();
+        String u = this.getConfig().get("username").toString();
+        String pass = this.getConfig().get("password").toString();
+
+        MySQL.connect(h, p, d, u, pass);
     }
 
 

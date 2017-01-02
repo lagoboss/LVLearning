@@ -35,6 +35,8 @@ public class LVL implements CommandExecutor{
     String cmdLabel_pass = "pass";
     String cmdLabel_fail = "fail";
     String cmdLabel_set = "set";
+    String cmdLabel_add = "add";
+    String cmdLabel_edit = "edit";
     String cmdVarExample = " <additional_argument(s)>";
     String lib = "Please visit your local library to learn more...";
 
@@ -97,13 +99,13 @@ public class LVL implements CommandExecutor{
         //Set courses = new HashSet(Arrays.asList(traits));
 
 
-        Set<String> uuids = plugin.getConfig().getConfigurationSection(p).getKeys(false);
+        //Set<String> uuids = plugin.getConfig().getConfigurationSection(p).getKeys(false);
 
-        Set<String> courses = plugin.getConfig().getConfigurationSection(T).getKeys(false);
+        //Set<String> courses = plugin.getConfig().getConfigurationSection(T).getKeys(false);
 
-        Set<String> traits = courses;
+        //Set<String> traits = courses;
 
-        if (command.getName().equalsIgnoreCase("LVL")){
+        /*if (command.getName().equalsIgnoreCase("LVL")){
 
             if(strings.length == 0){
 
@@ -307,7 +309,7 @@ public class LVL implements CommandExecutor{
                 }
             }
             return true;
-        }//if command = LVL code block end
+        }//if command = LVL code block end*/
         return true;
     }//on command end code block end
 }
