@@ -13,6 +13,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import static com.gmail.lagoland.help.LVLearning.MySQL.console;
+
 /**
  * Created by lake.smith on 12/25/2016.
  */
@@ -82,6 +84,12 @@ public class LVL implements CommandExecutor{
     String aL = "attempt_limit";
     String s = "school";
     String sT = "study_time";
+
+    String pluginConsoleDescription = "\247c[\2476LVLearning-SQL Server Connection\247c]";
+    String pluginDataConnection = "\247 Attempting to connected to SQL server to access information...";
+    String pluginDataConnectionCompleted = "\247 Returning Information";
+    String pluginDataConnectionFail = "\247 Connection failed...";
+
 
     String consoleAddedTag = "profile_created_by_console";
 
@@ -165,20 +173,26 @@ public class LVL implements CommandExecutor{
                 //working
                 else if (strings[0].equalsIgnoreCase("courses")) {
 
+                    //check to see if course has values
+                    //check to see if the course exists
+                    //create default information
+                    //If course does not exist, add the course to the table using the default information
                     try {
+                        console.sendMessage(pluginConsoleDescription + pluginDataConnection);
                         PreparedStatement selectAvailableCourses = MySQL.getConnection().prepareStatement("SELECT course_code From avail ");
                         ResultSet rs = selectAvailableCourses.executeQuery();
+                        console.sendMessage(pluginConsoleDescription + pluginDataConnectionCompleted);
 
                         player.sendMessage(checking);
                         player.sendMessage(coursesInclude);
 
-                        if (rs.next() == true) {
-                            player.sendMessage("- " + rs.getNString("course_code"));
-                        }
-                        else {
-                            player.sendMessage("No courses found :(");
+                        while (rs.next()) {
+
+                            player.sendMessage("- " + rs.getString("course_code"));
+
                         }
                     } catch (Exception e) {
+                        console.sendMessage(pluginConsoleDescription + pluginDataConnectionFail);
                         e.printStackTrace();
 
 
