@@ -6,7 +6,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created by lake.smith on 12/25/2016.
@@ -89,46 +92,48 @@ public class LVL implements CommandExecutor{
         return cal.getTime();
     }
 
+    //if somone types a command, this code block will be executed
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
 
+        //defining the command sender to be a player; from here, we can get attributes from this player via "player."
         Player player = (Player) commandSender;
 
-        //Object[] traitObject = plugin.getConfig().getList(T).toArray();
-        //String[] traits = (String[]) traitObject[0];
-        //Set courses = new HashSet(Arrays.asList(traits));
+        //if the command root = "LVL" with case ignored, this code block will be executed
+        if (command.getName().equalsIgnoreCase("LVL")){
 
-
-        //Set<String> uuids = plugin.getConfig().getConfigurationSection(p).getKeys(false);
-
-        //Set<String> courses = plugin.getConfig().getConfigurationSection(T).getKeys(false);
-
-        //Set<String> traits = courses;
-
-        /*if (command.getName().equalsIgnoreCase("LVL")){
-
+            //must check length of command before checking any other conditions about the command entered;
+            //if there are no additionall arguments entered after "/lvl" the code will execute the following block of code
             if(strings.length == 0){
 
+                //here, I am establishing a list of strings to send to the player
                 List<String> messageSuiteNoArgs = new ArrayList<String>();
 
+                //here, I am adding to my list of strings
                 messageSuiteNoArgs.add(versionNumber);
                 messageSuiteNoArgs.add(pluginName);
                 messageSuiteNoArgs.add(description);
                 messageSuiteNoArgs.add(commands);
 
+                //here, I am singling every string in my list out
                 for (String item : messageSuiteNoArgs){
 
+                    //here, I am sending the player the string for every item that I placed into the list
                     player.sendMessage(item);
                 }
 
                 return true;
             }
-
+            //if there is one argument after "/lvl," the command will execute the code block
             else if(strings.length == 1){
 
+                //if the 1st argument after "/lvl" = "help," then the following code block will be executed
                 if(strings[0].equalsIgnoreCase("help")){
+
+                    //here, I have created a list that will hold strings
                     List<String> messageUsage = new ArrayList<String>();
 
+                    //here, I have added to the list of strings; these are the list of commands that I will add
                     messageUsage.add(cmdLabel_help);
                     messageUsage.add(cmdLabel_courses);
                     messageUsage.add(cmdLabel_course);
@@ -138,13 +143,18 @@ public class LVL implements CommandExecutor{
                     messageUsage.add(cmdLabel_set);
                     messageUsage.add(cmdLabel_pass);
                     messageUsage.add(cmdLabel_fail);
+                    messageUsage.add(cmdLabel_add);
+                    messageUsage.add(cmdLabel_edit);
 
+                    //this will send a message to the player "Commands include:"
                     player.sendMessage("Commands include:");
 
+                    //for every entry into the list explaining the available commands, it will display it to the player
                     for (String itemMU : messageUsage){
                         player.sendMessage(usage + itemMU + cmdVarExample);
                     }
-
+                    //this message explains where the user can go to get more help on using the plugin
+                    //will make this configurable from the config file
                     player.sendMessage(lib);
 
                     return true;
@@ -152,18 +162,6 @@ public class LVL implements CommandExecutor{
 
                 else if(strings[0].equalsIgnoreCase("courses")){
 
-                    if(!(courses.size() == 0)){
-                        player.sendMessage("Course(s) include: ");
-
-                        //fix ClassCastException string <- > linked hashmaps
-
-                        for (String course : courses){
-                            player.sendMessage(course);
-                        }
-                        return true;
-                    }
-                    else
-                        player.sendMessage(noCoursesFound);
                     return true;
                 }
 
@@ -177,106 +175,10 @@ public class LVL implements CommandExecutor{
             else if(strings.length == 2) {
 
                 if (strings[0].equalsIgnoreCase("course")) {
-
-                    player.sendMessage(checking);
-
-                    if(traits.toString().contains(strings[1].toLowerCase())){
-
-                        String trait = strings[1].toLowerCase();
-
-                        player.sendMessage("Found! " + trait);
-
-                        //need to fix the getString to get list item?
-                        String description = plugin.getConfig().getString("Traits." + strings[1].toLowerCase() + "."+ "description");
-                        String requirement = plugin.getConfig().getString("Traits." + strings[1].toLowerCase() + "." + "requirement");
-                        String courseCode = plugin.getConfig().getString("Traits." + strings[1].toLowerCase() + "." + "course_code");
-                        String school = plugin.getConfig().getString("Traits." + strings[1].toLowerCase() + "." + "school");
-
-                        player.sendMessage("Description: " + description);
-                        player.sendMessage("Required Permission: " + requirement);
-                        player.sendMessage("Course Code: " + courseCode);
-                        player.sendMessage("School: " + school);
-                        return  true;
-                        }
-
-                    else {
-                        player.sendMessage(invalidCourse + noCoursesFound);
-                            return true;
-                        }
+                    return true;
                 }
                 else if (strings[0].equalsIgnoreCase("enroll")) {
 
-                    if(traits.toString().contains(strings[1].toLowerCase())){
-                        //check to see if the player has the permission to enroll
-                        if(4 > 1){
-
-                            String uuid = player.getUniqueId().toString();
-                            String playerName = player.getName();
-
-                            //check to see if uuid exists on list
-                            //add logic to not create a duplicate profile
-                            if(!Arrays.asList(uuids).contains(uuid)){
-
-                                plugin.getConfig().getStringList(p).add(uuid);
-                                plugin.saveConfig();
-
-                                //make a method to add this stuff with a command /lvl createprofile player_name so duplication is reduced
-                                //change the strings like "Players." into variables
-                                plugin.getConfig().getStringList(p + dot + uuid).add(pN);
-                                plugin.saveConfig();
-                                plugin.getConfig().getStringList(p + dot + uuid + dot + pN).add(playerName);
-                                plugin.saveConfig();
-                                plugin.getConfig().getStringList(p + dot + uuid).add(t);
-                                plugin.saveConfig();
-                                plugin.getConfig().getStringList(p + dot + uuid).add(eC);
-                                plugin.saveConfig();
-                                plugin.getConfig().getStringList(p + dot + uuid).add(iC);
-                                plugin.saveConfig();
-                                plugin.getConfig().getStringList(p + dot + uuid).add(tags);
-                                plugin.saveConfig();
-                                plugin.getConfig().getStringList(p + dot + uuid + dot + t).add(consoleAddedTag);
-                                plugin.saveConfig();
-
-                                player.sendMessage("Profile created for uuid: " + uuid);
-
-                                //fix terrible file structure
-                                //fix
-                                plugin.getConfig().getStringList(p + dot + uuid + eC).add(strings[1].toLowerCase());
-                                plugin.getConfig().set("Players." + uuid, "ineligible_courses");
-                                plugin.saveConfig();
-                                plugin.getConfig().getStringList(p + dot + uuid + eC + dot + strings[1].toLowerCase()).add(tED);
-                                plugin.saveConfig();
-                                int days = plugin.getConfig().getInt(T + dot + strings[1].toLowerCase() + dot + sT);
-                                Date date = new java.util.Date();
-                                plugin.getConfig().getStringList(p + dot + uuid + eC + dot + strings[1].toLowerCase() + dot + tED).add(addDays(date, days).toString());
-
-                                String school = plugin.getConfig().getString(T + dot + strings[1].toLowerCase() + dot + s);
-                                player.sendMessage(confirmEnroll1 + strings[1] + confirmEnroll2 + school + confirmEnroll3);
-                            }
-
-                            else if(Arrays.asList(uuids).contains(uuid)){
-
-                                plugin.getConfig().getStringList(p + dot + uuid + eC).add(strings[1].toLowerCase());
-                                plugin.getConfig().set("Players." + uuid, "ineligible_courses");
-                                plugin.saveConfig();
-                                plugin.getConfig().getStringList(p + dot + uuid + eC + dot + strings[1].toLowerCase()).add(tED);
-                                plugin.saveConfig();
-                                int days = plugin.getConfig().getInt(T + dot + strings[1].toLowerCase() + dot + sT);
-                                Date date = new java.util.Date();
-                                plugin.getConfig().getStringList(p + dot + uuid + eC + dot + strings[1].toLowerCase() + dot + tED).add(addDays(date, days).toString());
-
-                                String school = plugin.getConfig().getString(T + dot + strings[1].toLowerCase() + dot + s);
-                                player.sendMessage(confirmEnroll1 + strings[1] + confirmEnroll2 + school + confirmEnroll3);
-                            }
-                            return true;
-                        }
-                        //if player does not have this permission, do this
-                        else{
-                            player.sendMessage(noPerms);
-                            return true;
-                        }
-
-                    }
 
                     return true;
                 }
@@ -287,14 +189,8 @@ public class LVL implements CommandExecutor{
 
                 else if (strings[0].equalsIgnoreCase("test")) {
                     return true;
-                }
+                } //end of commands with 2 additional arguments
 
-                //end of commands with 2 additional arguments
-                else{
-                    player.sendMessage(error);
-                    return true;
-                }
-            }
 
             else if(strings.length == 3) {
 
@@ -309,8 +205,10 @@ public class LVL implements CommandExecutor{
                 }
             }
             return true;
-        }//if command = LVL code block end*/
-        return true;
+        }//if command = LVL code block end
+
     }//on command end code block end
+        return true;
+    }
 }
 
