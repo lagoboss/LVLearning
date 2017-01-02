@@ -5,6 +5,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -52,6 +54,7 @@ public class LVL implements CommandExecutor{
     String tooFew = "Too few arguments entered... type ";
 
     String checking = "Checking the list...";
+    String coursesInclude = "Course codes include: ";
 
     String noPerms = "You do not have permission to enroll in this course; pelase see course description for more details...";
     String confirmEnroll1 = "You enrolled in course: ";
@@ -100,11 +103,11 @@ public class LVL implements CommandExecutor{
         Player player = (Player) commandSender;
 
         //if the command root = "LVL" with case ignored, this code block will be executed
-        if (command.getName().equalsIgnoreCase("LVL")){
+        if (command.getName().equalsIgnoreCase("LVL")) {
 
             //must check length of command before checking any other conditions about the command entered;
             //if there are no additionall arguments entered after "/lvl" the code will execute the following block of code
-            if(strings.length == 0){
+            if (strings.length == 0) {
 
                 //here, I am establishing a list of strings to send to the player
                 List<String> messageSuiteNoArgs = new ArrayList<String>();
@@ -116,7 +119,7 @@ public class LVL implements CommandExecutor{
                 messageSuiteNoArgs.add(commands);
 
                 //here, I am singling every string in my list out
-                for (String item : messageSuiteNoArgs){
+                for (String item : messageSuiteNoArgs) {
 
                     //here, I am sending the player the string for every item that I placed into the list
                     player.sendMessage(item);
@@ -125,10 +128,10 @@ public class LVL implements CommandExecutor{
                 return true;
             }
             //if there is one argument after "/lvl," the command will execute the code block
-            else if(strings.length == 1){
+            else if (strings.length == 1) {
 
                 //if the 1st argument after "/lvl" = "help," then the following code block will be executed
-                if(strings[0].equalsIgnoreCase("help")){
+                if (strings[0].equalsIgnoreCase("help")) {
 
                     //here, I have created a list that will hold strings
                     List<String> messageUsage = new ArrayList<String>();
@@ -150,7 +153,7 @@ public class LVL implements CommandExecutor{
                     player.sendMessage("Commands include:");
 
                     //for every entry into the list explaining the available commands, it will display it to the player
-                    for (String itemMU : messageUsage){
+                    for (String itemMU : messageUsage) {
                         player.sendMessage(usage + itemMU + cmdVarExample);
                     }
                     //this message explains where the user can go to get more help on using the plugin
@@ -159,56 +162,90 @@ public class LVL implements CommandExecutor{
 
                     return true;
                 }
+                //working
+                else if (strings[0].equalsIgnoreCase("courses")) {
 
-                else if(strings[0].equalsIgnoreCase("courses")){
+                    try {
+                        PreparedStatement selectAvailableCourses = MySQL.getConnection().prepareStatement("SELECT course_code From avail ");
+                        ResultSet rs = selectAvailableCourses.executeQuery();
 
-                    return true;
+                        player.sendMessage(checking);
+                        player.sendMessage(coursesInclude);
+
+                        if (rs.next() == true) {
+                            player.sendMessage("- " + rs.getNString("course_code"));
+                        }
+                        else {
+                            player.sendMessage("No courses found :(");
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+
+
+                        return true;
+                    }
                 }
 
-                else if(strings[0].equalsIgnoreCase("course")){
+                else if (strings[0].equalsIgnoreCase("course")) {
 
-                    player.sendMessage(tooFew + usage + cmdLabel_course + cmdVarExample);
-                    return true;
+                        player.sendMessage(tooFew + usage + cmdLabel_course + cmdVarExample);
+                        return true;
+                    }
                 }
-            }
 
-            else if(strings.length == 2) {
+            else if (strings.length == 2) {
 
                 if (strings[0].equalsIgnoreCase("course")) {
                     return true;
-                }
-                else if (strings[0].equalsIgnoreCase("enroll")) {
-
-
+                } else if (strings[0].equalsIgnoreCase("enroll")) {
                     return true;
-                }
-
-                else if (strings[0].equalsIgnoreCase("ecourses")) {
+                } else if (strings[0].equalsIgnoreCase("ecourses")) {
                     return true;
-                }
-
-                else if (strings[0].equalsIgnoreCase("test")) {
+                } else if (strings[0].equalsIgnoreCase("test")) {
                     return true;
-                } //end of commands with 2 additional arguments
+                } else if (strings[0].equalsIgnoreCase("add")) {
+                    try {
+                        PreparedStatement checkingForCourse = MySQL.getConnection().prepareStatement("SELECT" + " course_code " +
+                                "From" + " avail " + "WHERE" + " course_code = ?");
+                        checkingForCourse.setString(1, strings[1].toLowerCase());
+                        ResultSet rs = checkingForCourse.executeQuery();
+                        if (rs.wasNull()) {
 
+                            try {
+                                PreparedStatement addToCourseList = MySQL.getConnection().prepareStatement("INSERT " + " course_code " + "INTO" + " avail " +
+                                        " (course_code) " + "VALUES" + " (?)");
+                                addToCourseList.setString(1, strings[1].toLowerCase());
+                                addToCourseList.executeUpdate();
 
-            else if(strings.length == 3) {
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return true;
+                }//end of add code block
+
+                return true;
+            }
+
+            else if (strings.length == 3) {
 
                 if (strings[0].equalsIgnoreCase("test")) {
                     return true;
                 }
+                return true;
+            }//end of commands with 3 additional arguments
 
-                //end of commands with 3 additional arguments
-                else{
-                    player.sendMessage(error);
-                    return true;
-                }
+            else {
+                player.sendMessage(error);
+                return true;
             }
-            return true;
-        }//if command = LVL code block end
-
-    }//on command end code block end
+                return true;
+            }//if command = LVL code block end
         return true;
+        }
     }
-}
 
