@@ -55,7 +55,7 @@ public class Main extends JavaPlugin{
             e.printStackTrace();
         }
 
-        try {PreparedStatement psSchools = MySQL.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS enrolls (school_name VARCHAR(255), school_city VARCHAR(255), school_type VARCHAR(255), x FLOAT, y FLOAT, z FLOAT, PRIMARY KEY (school_name))");
+        try {PreparedStatement psSchools = MySQL.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS schools (school_name VARCHAR(255), school_city VARCHAR(255), school_type VARCHAR(255), x FLOAT, y FLOAT, z FLOAT, PRIMARY KEY (school_name))");
             psSchools.executeUpdate();} catch (Exception e){
             e.printStackTrace();
         }

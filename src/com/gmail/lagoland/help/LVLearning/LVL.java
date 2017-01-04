@@ -93,6 +93,8 @@ public class LVL implements CommandExecutor{
 
     String consoleAddedTag = "profile_created_by_console";
 
+    String errorCourseOnList = "Error, course on list...";
+
     String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
 
     public static Date addDays(Date date, int days)
@@ -218,23 +220,31 @@ public class LVL implements CommandExecutor{
                 } else if (strings[0].equalsIgnoreCase("test")) {
                     return true;
                 } else if (strings[0].equalsIgnoreCase("add")) {
+
                     try {
                         PreparedStatement checkingForCourse = MySQL.getConnection().prepareStatement("SELECT" + " course_code " +
-                                "From" + " avail " + "WHERE" + " course_code = ?");
-                        checkingForCourse.setString(1, strings[1].toLowerCase());
+                                "From" + " avail " + "WHERE" + " course_code = " + "\"" + strings[1].toLowerCase() +"\"" + ";");
+                        //checkingForCourse.setString(1, strings[1].toLowerCase());
                         ResultSet rs = checkingForCourse.executeQuery();
-                        if (rs.wasNull()) {
+                        player.sendMessage(pluginName + pluginDataConnection);
+                        player.sendMessage(pluginName + pluginDataConnectionCompleted);
+                        if (rs.getString(strings[1].toLowerCase()) != strings[1].toLowerCase()) {
 
                             try {
-                                PreparedStatement addToCourseList = MySQL.getConnection().prepareStatement("INSERT " + " course_code " + "INTO" + " avail " +
-                                        " (course_code) " + "VALUES" + " (?)");
-                                addToCourseList.setString(1, strings[1].toLowerCase());
+                                PreparedStatement addToCourseList = MySQL.getConnection().prepareStatement("INSERT INTO lvlearning.avail (course_code) VALUES" + "\"" + strings[1].toLowerCase() +"\"" + ";");
+                                //addToCourseList.setString(1, strings[1].toLowerCase());
                                 addToCourseList.executeUpdate();
+                                player.sendMessage(pluginName + pluginDataConnection);
+                                player.sendMessage(pluginName + pluginDataConnectionCompleted);
 
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
 
+                        }
+
+                        else {
+                            player.sendMessage(errorCourseOnList);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
