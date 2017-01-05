@@ -223,15 +223,22 @@ public class LVL implements CommandExecutor{
 
                     try {
                         PreparedStatement checkingForCourse = MySQL.getConnection().prepareStatement("SELECT" + " course_code " +
-                                "From" + " avail " + "WHERE" + " course_code = " + "\"" + strings[1].toLowerCase() +"\"" + ";");
+                                "From" + " avail " + "WHERE" + " course_code " + "LIKE" + "'%" + strings[1].toLowerCase() + "%'" + ";");
                         //checkingForCourse.setString(1, strings[1].toLowerCase());
                         ResultSet rs = checkingForCourse.executeQuery();
                         player.sendMessage(pluginName + pluginDataConnection);
                         player.sendMessage(pluginName + pluginDataConnectionCompleted);
-                        if (rs.getString(strings[1].toLowerCase()) != strings[1].toLowerCase()) {
+                        List<String> rsList = new ArrayList<>();
+
+                        while(rs.next()){
+                            rsList.add(rs.getString("course_code"));
+                        }
+                        if (!rsList.contains(strings[1].toLowerCase())) {
 
                             try {
-                                PreparedStatement addToCourseList = MySQL.getConnection().prepareStatement("INSERT INTO lvlearning.avail (course_code) VALUES" + "\"" + strings[1].toLowerCase() +"\"" + ";");
+                                String preparedQueryAdd = "INSERT INTO lvlearning.avail (course_code) VALUES" + "(\"" + strings[1].toLowerCase() + "\")" + ";";
+                                console.sendMessage(preparedQueryAdd);
+                                PreparedStatement addToCourseList = MySQL.getConnection().prepareStatement(preparedQueryAdd);
                                 //addToCourseList.setString(1, strings[1].toLowerCase());
                                 addToCourseList.executeUpdate();
                                 player.sendMessage(pluginName + pluginDataConnection);
