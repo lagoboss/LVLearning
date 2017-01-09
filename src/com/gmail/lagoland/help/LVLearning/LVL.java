@@ -223,8 +223,8 @@ public class LVL implements CommandExecutor{
 
                     try {
                         PreparedStatement checkingForCourse = MySQL.getConnection().prepareStatement("SELECT" + " course_code " +
-                                "From" + " avail " + "WHERE" + " course_code " + "LIKE" + "'%" + strings[1].toLowerCase() + "%'" + ";");
-                        //checkingForCourse.setString(1, strings[1].toLowerCase());
+                                "From" + " avail " + "WHERE" + " course_code " + "LIKE" + " ? " + ";");
+                        checkingForCourse.setString(1, strings[1].toLowerCase());
                         ResultSet rs = checkingForCourse.executeQuery();
                         player.sendMessage(pluginName + pluginDataConnection);
                         player.sendMessage(pluginName + pluginDataConnectionCompleted);
@@ -236,10 +236,10 @@ public class LVL implements CommandExecutor{
                         if (!rsList.contains(strings[1].toLowerCase())) {
 
                             try {
-                                String preparedQueryAdd = "INSERT INTO lvlearning.avail (course_code) VALUES" + "(\"" + strings[1].toLowerCase() + "\")" + ";";
+                                String preparedQueryAdd = "INSERT INTO lvlearning.avail (course_code) VALUES (?);";
                                 console.sendMessage(preparedQueryAdd);
                                 PreparedStatement addToCourseList = MySQL.getConnection().prepareStatement(preparedQueryAdd);
-                                //addToCourseList.setString(1, strings[1].toLowerCase());
+                                addToCourseList.setString(1, strings[1].toLowerCase());
                                 addToCourseList.executeUpdate();
                                 player.sendMessage(pluginName + pluginDataConnection);
                                 player.sendMessage(pluginName + pluginDataConnectionCompleted);
